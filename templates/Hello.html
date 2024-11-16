@@ -8,7 +8,7 @@
 <body>
     <p>Добро пожаловать в панель управления!</p>
     {% for device in devices %}
-    <a href="{{ urlfor('get_device') }}/{{ device[0] }}">{{ device[1] }}</a>
+    <a href="{{ url_for('get_device', dev_id=device[0]) }}">{{ device[1] }}</a>
     {% endfor %}
 </body>
 </html>
