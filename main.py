@@ -1,7 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 import sqlite3
 import os
 import random
+import json
 
 LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 LETTERS += LETTERS.lower()
@@ -23,7 +24,8 @@ def index():
     if auth_key != key:
         print(" * Запрос отклонен.")
         return "Запрос отклонен."
-    return 'Приветствуем в нашей панели управления!'
+    devices = cur.execute("""SELECT ID, Name FROM Devices""").fetchall()
+    return render_template("Hello.html", devices=devices)
 
 
 @app.route('/add_device', methods=['post', 'get'])
@@ -44,7 +46,7 @@ def add_device():
         print(" * Устройство уже добавлено в базу данных.")
     device_id = cur.execute(f"""SELECT ID FROM Devices WHERE Address="{device_address}" """).fetchone()[0]
     device_conf_f = open(f"Devices/{device_id}.json", "w+")
-    device_conf_f.write(device_conf)
+    device_conf_f.write(json.dumps(json.loads(device_conf), sort_keys=True, indent=4))
     device_conf_f.close()
     return 'Добавление умного устройства завершено.'
 
@@ -64,6 +66,11 @@ def delete_device():
     cur.execute(f"""DELETE FROM Devices WHERE ID={device_id}""")
     cur.execute("""COMMIT""")
     return 'Удаление умного устройства завершено.'
+
+
+@app.route('/get_device/<dev_id>')
+def get_device(dev_id):
+    return dev_id
 
 
 if __name__ == "__main__":
