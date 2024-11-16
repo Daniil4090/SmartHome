@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель управления</title>
+</head>
+<body>
+    <p>Добро пожаловать в панель управления!</p>
+    {% for device in devices %}
+    <a href="{{ urlfor('get_device') }}/{{ device[0] }}">{{ device[1] }}</a>
+    {% endfor %}
+</body>
+</html>
