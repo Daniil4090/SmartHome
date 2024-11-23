@@ -4,18 +4,7 @@ import os
 import random
 import json
 
-LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-LETTERS += LETTERS.lower()
-LETTERS +="1234567890"
-
 app = Flask(__name__)
-
-
-def generate_key(a):
-    key = ""
-    for i in range(a):
-        key += random.choice(LETTERS)
-    return key
 
 
 @app.route('/')
@@ -81,16 +70,16 @@ if __name__ == "__main__":
         config.close()
         print(" * Выполнено!")
     except FileNotFoundError:
-        print(" * Возникла ошибка при чтении. Идет создание конфигурации...")
-        key = generate_key(16)
-        config = open("config.txt", "w+")
-        config.write(key)
-        config.close()
-        print(" * Выполнено!")
+        print(" * Возникла ошибка при чтении ключа, запустите программу инициализацию...")
+        exit()
     print(" * Ключ для взаимодействия с панелью:", key)
     print(" ! НИКОМУ НЕ СООБЩАЙТЕ ЭТОТ КЛЮЧ!")
     print(" * Подключение базы данных...")
-    con = sqlite3.connect("Devices/HomePanel.db", check_same_thread=False)
+    try:
+        con = sqlite3.connect("Devices/HomePanel.db", check_same_thread=False)
+    except FileNotFoundError:
+        print(" * Возникла ошибка при подключении базы данных, запустите программу инициализацию...")
+        exit()
     cur = con.cursor()
     print(" * Успешно!")
     print(" * Запуск сервера...")
