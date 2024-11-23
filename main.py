@@ -63,8 +63,8 @@ def get_device(dev_id):
 
 
 if __name__ == "__main__":
+    print(" * Чтение ключа...")
     try:
-        print(" * Чтение ключа...")
         config = open("config.txt", "r")
         key = config.read()
         config.close()
